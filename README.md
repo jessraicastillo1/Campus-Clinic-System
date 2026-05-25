@@ -1,279 +1,185 @@
-Campus Clinic Record System — v9
+# Campus Clinic Record System — v9
 
-A modular PyQt6 desktop-based clinic management system designed for campus healthcare environments.
-The system manages patient records, consultations, vitals, medicine inventory, dispensing workflows, queue management, audit tracking, and reporting within a centralized offline application.
+A PyQt6 desktop application for managing a school clinic. Runs fully offline — no internet or database server required. All data is stored in plain CSV files on disk.
 
-Built using:
+## Quick Start
 
-Python
-PyQt6
-CSV-based persistence layer
-Modular OOP architecture
-Overview
+### Requirements
 
-The application is designed to simulate a lightweight clinical information system for educational institutions.
-It focuses on:
+```
+Python 3.10+
+PyQt6 >= 6.4.0
+```
 
-Patient record management
-Clinical safety workflows
-Medicine inventory monitoring
-Queue prioritization
-Audit accountability
-Printable reporting
-Modular maintainable architecture
+### Install
 
-The project evolved through multiple refactoring iterations to improve:
-
-code organization,
-data validation,
-UI consistency,
-maintainability,
-and operational safety.
-Major Features
-Patient Management
-Add, edit, delete, and search patient records
-Store:
-demographics,
-allergies,
-medical conditions,
-contact information
-Real-time search filtering
-Form validation before saving
-Clinical Vitals System
-Record:
-blood pressure,
-temperature,
-heart rate,
-respiratory rate,
-oxygen saturation,
-height,
-weight,
-BMI
-Automatic BMI calculation
-Out-of-range alerts
-Highlight abnormal values visually
-Confirmation prompt before saving abnormal vitals
-Dispensing & Prescription Module
-Medicine dispensing workflow
-Prescription recording
-Inventory deduction integration
-Allergy warning banner before dispensing
-Dispense history tracking
-Inventory Management
-Medicine inventory tracking
-Batch/Lot number support
-Stock quantity monitoring
-Expiration date tracking
-Low-stock visual alerts
-Medication recall support
-Queue Management
-Student/patient queue tracking
-Priority levels:
-Normal
-Urgent
-Emergency
-Color-coded priority visualization
-Queue status management
-Audit Trail System
-
-Every critical action is logged:
-
-Add
-Edit
-Delete
-Dispense
-Login events
-
-Audit records include:
-
-user,
-timestamp,
-affected record,
-action type
-
-This improves:
-
-accountability,
-traceability,
-administrative monitoring.
-Reporting & Printing
-
-Each major module supports:
-
-formatted print previews,
-HTML-based report generation,
-browser printing support.
-Backup System
-
-Integrated backup utility:
-
-creates timestamped backup folders,
-copies all CSV databases,
-supports lightweight disaster recovery.
-What's New in v9
-Architecture Improvements
-Improvement	Description
-✅ Modular page system	UI pages separated into focused modules
-✅ Expanded model layer	Stronger object-oriented domain modeling
-✅ Cleaner backend separation	Reduced direct UI-to-storage coupling
-✅ Centralized configuration	Shared constants and enums in config
-✅ Improved validation	Consistent validation workflow across forms
-✅ Better error handling	Removed silent exception patterns
-✅ Dashboard stat extraction	Business logic separated from UI widgets
-✅ Reusable table framework	Shared table-page behavior across modules
-Clinical & Workflow Improvements
-Improvement	Description
-✅ Allergy safety alerts	Dispense module warns against allergy conflicts
-✅ Auto BMI computation	BMI updates dynamically from height/weight
-✅ Abnormal vitals highlighting	Unsafe ranges visually emphasized
-✅ Queue priority workflow	Emergency handling support
-✅ Batch/Lot tracking	Medication recall traceability
-✅ Real-time search	Instant filtering across modules
-✅ Audit monitoring	Full action history viewer
-✅ Printable reports	HTML-based print support
-Technology Stack
-Component	Technology
-Language	Python
-GUI Framework	PyQt6
-Data Storage	CSV
-Styling	Qt Style Sheets (QSS)
-Packaging	PyInstaller
-Architecture Style	Modular Layered Architecture
-Project Structure
-campus_clinic_system_v9/
-├── main.py
-├── requirements.txt
-├── ClinicSystem.spec
-├── populate_sample_data.py
-│
-├── backend/
-│   ├── auth.py
-│   ├── config.py
-│   ├── database.py
-│   ├── dashboard_stats.py
-│   ├── inventory.py
-│   ├── models.py
-│   ├── queue_logic.py
-│   └── utils.py
-│
-├── data/
-│   ├── patients.csv
-│   ├── inventory.csv
-│   ├── vitals.csv
-│   ├── queue.csv
-│   ├── prescriptions.csv
-│   └── audit_log.csv
-│
-├── ui/
-│   ├── dashboard_window.py
-│   ├── login_window.py
-│   │
-│   └── pages/
-│       ├── audit_page.py
-│       ├── dispense_page.py
-│       ├── home_page.py
-│       ├── inventory_page.py
-│       ├── patient_page.py
-│       ├── queue_page.py
-│       ├── table_page.py
-│       └── vitals_page.py
-│
-└── backups/
-Installation
-1. Clone the Repository
-git clone <repository-url>
-cd campus_clinic_system_v9
-2. Install Dependencies
-pip install -r requirements.txt
-
-Minimal requirement:
-
+```bash
 pip install PyQt6
-Running the Application
+```
+
+### Run
+
+```bash
 python main.py
-Default Login
-Username: admin
-Password: admin123
+```
 
-Change default credentials immediately in production usage.
+On first launch, you will be prompted to create an admin account and a recovery key. Store the recovery key somewhere safe — it is the only way to reset a forgotten password.
 
-Architectural Notes
-Current Persistence Design
+---
 
-The system currently uses:
+## Default Login (after first-run setup)
 
-CSV-based persistence
+Use the credentials you created on first launch. There is no hardcoded default account.
 
-Advantages:
+---
 
-lightweight,
-portable,
-zero setup,
-beginner-friendly.
+## Features
 
-Limitations:
+### Patient Management
+- Register students and staff as patients (with role type)
+- Track personal info, blood type, allergies, and chronic conditions
+- Live search bar on every module — type to filter instantly
+- Allergy warning banner shown in red when dispensing medicine to a patient with recorded allergies
 
-no transactions,
-limited scalability,
-entire-file rewrites,
-weaker concurrency safety.
+### Clinical Modules
+| Module | What it does |
+|---|---|
+| Medical History | Log visit complaints, diagnosis, treatment, and notes |
+| Vitals | Record height, weight, BP, temperature; auto-calculates BMI; highlights out-of-range values in red |
+| Vaccinations | Track vaccine name, dose, date given, and next due date |
+| Prescriptions | Issue and view prescriptions with drug, dosage, frequency, and duration |
+| Dispensing | Dispense inventory items to patients; checks for allergies; deducts stock automatically |
+| Queue | Patient check-in queue with Normal / Urgent / Emergency priority and color-coded rows |
+| Appointments | Schedule and track appointments with status (pending → confirmed → completed) |
 
-Future planned migration:
+### Administrative Modules
+| Module | What it does |
+|---|---|
+| Inventory | Track medicines and supplies with quantity, expiry date, reorder level, and batch/lot number |
+| Referrals | Record external referrals with reason and destination |
+| Clearances | Issue medical clearances (pending / approved / rejected) |
+| Excused Absences | Issue absence certificates with date ranges |
+| Incidents | Log clinic incidents with location, description, and actions taken |
+| Emergency Contacts | Store emergency contact info per patient |
 
-SQLite database layer
-Design Patterns Used
+### System Features
+- **Audit trail** — every Add / Edit / Delete / Dispense is logged to `audit_log.csv` with the user, timestamp, module, and record ID
+- **Data backup** — sidebar "💾 Backup Data" button copies all CSV files to a timestamped folder under `data/backups/`
+- **Print** — every module has a 🖨 Print button that opens a formatted HTML report in the browser
+- **Role-based access** — three roles: `admin`, `staff`, `viewer`
+- **Recovery key** — admin password can be reset using the recovery key generated on first run
 
-The project partially implements:
+---
 
-Repository-style persistence abstraction
-Observer pattern via Qt signals/slots
-Layered modular architecture
-Domain model abstraction
-Shared component reuse
-Known Limitations
-Area	Limitation
-Persistence	CSV is not ideal for large-scale systems
-Concurrency	Single-process desktop design
-Threading	Some operations remain synchronous
-Security	Requires stronger production-grade authentication
-Testing	Automated tests are limited
-Future Improvements
-Planned Refactors
-SQLite migration
-Service layer abstraction
-QThread background operations
-Stronger typing/dataclasses
-Automated testing
-Role-based permissions
-Export to PDF/Excel
-Advanced analytics dashboard
-Engineering Focus
+## Architecture
 
-This project emphasizes:
+```
+clinic_systemv9/
+├── main.py                        # Entry point; applies global stylesheet; shows login
+├── requirements.txt
+├── backend/
+│   ├── config.py                  # File paths, date formats, role list, status enums
+│   ├── models.py                  # Domain model classes (Patient, Vital, InventoryItem, etc.)
+│   ├── database.py                # CSV read/write, audit logging, backup
+│   ├── auth.py                    # Password hashing (SHA-256), login, recovery key
+│   ├── dashboard_stats.py         # All dashboard metric calculations (extracted from UI)
+│   ├── inventory.py               # Inventory-specific helpers (stock deduction)
+│   ├── queue_logic.py             # Queue add/update logic with duplicate guard
+│   └── utils.py                   # new_id(), calc_bmi(), is_low_stock(), is_expiring_soon()
+├── ui/
+│   ├── login_window.py            # Login screen with register and forgot-password flow
+│   ├── dashboard_window.py        # Main window with sidebar navigation
+│   └── pages/
+│       ├── base_page.py           # Base class all pages inherit from
+│       ├── table_page.py          # Reusable table with search, print, row count
+│       ├── home_page.py           # Dashboard stats cards
+│       ├── patient_page.py        # Patient list and registration form
+│       ├── vitals_page.py         # Vitals recording with range alerts and auto-BMI
+│       ├── clinical_pages.py      # Appointments, Queue, Emergency contacts, Inventory
+│       ├── admin_pages.py         # Referrals, Clearances, Absences, Incidents
+│       ├── dispense_page.py       # Medicine dispensing with allergy check
+│       ├── history_page.py        # Medical history per patient
+│       ├── prescriptions_page.py  # Prescription management
+│       ├── vaccines_page.py       # Vaccination records
+│       ├── inventory_page.py      # Inventory list with low-stock and expiry alerts
+│       ├── audit_page.py          # Read-only audit trail viewer
+│       ├── users_page.py          # User account management (admin only)
+│       ├── shared_modal.py        # Reusable modal dialog components
+│       └── _dialog_base.py        # Base class for all dialogs
+└── data/
+    ├── patients.csv
+    ├── vitals.csv
+    ├── medical_history.csv
+    ├── prescriptions.csv
+    ├── dispensing_log.csv
+    ├── inventory.csv
+    ├── queue.csv
+    ├── appointments.csv
+    ├── vaccinations.csv
+    ├── referrals.csv
+    ├── clearances.csv
+    ├── excused_absences.csv
+    ├── incidents.csv
+    ├── emergency_contacts.csv
+    ├── audit_log.csv
+    ├── users.csv
+    └── backups/                   # Timestamped backup folders created by the app
+```
 
-practical desktop application engineering,
-modularization,
-GUI architecture,
-CRUD workflows,
-maintainable PyQt6 structure,
-and clinical workflow simulation.
-Educational Value
+---
 
-The project demonstrates concepts in:
+## Data Flow
 
-Object-Oriented Programming
-GUI Engineering
-Event-Driven Architecture
-Data Persistence
-Software Modularity
-Validation Systems
-User Workflow Design
-Desktop Application Packaging
-License
+1. `main.py` starts → creates all CSV files if missing → shows login window
+2. User logs in → `auth.py` hashes the password with SHA-256 and checks `users.csv`
+3. Dashboard loads → `dashboard_stats.py` reads CSVs and computes all metrics
+4. User opens a module → the matching page loads and reads its CSV
+5. User fills a form → `models.py` validates the data (required fields, numeric ranges)
+6. On save → `database.py` writes to the module's CSV and appends a row to `audit_log.csv`
+7. The table refreshes by re-reading the CSV
 
-This project is intended for:
+---
 
-academic use,
-educational demonstrations,
-portfolio development,
-and software engineering practice.
+## Roles
+
+| Role | Permissions |
+|---|---|
+| `admin` | Full access including user management, audit log, and system settings |
+| `staff` | Full clinical and administrative access; cannot manage users |
+| `viewer` | Read-only access to patient records and reports |
+
+New self-registered accounts start as `viewer` and must be promoted by an admin.
+
+---
+
+## Vital Normal Ranges
+
+The system flags out-of-range vitals in red and prompts for confirmation before saving.
+
+| Measurement | Normal Range |
+|---|---|
+| Systolic BP | 70 – 180 mmHg |
+| Diastolic BP | 40 – 120 mmHg |
+| Temperature | 35.0 – 38.5 °C |
+| BMI | 10.0 – 40.0 |
+
+---
+
+## Building a Standalone Executable
+
+A PyInstaller spec file is included:
+
+```bash
+pip install pyinstaller
+pyinstaller ClinicSystem.spec
+```
+
+The output will be in the `dist/` folder.
+
+---
+
+## Notes
+
+- All data is stored locally. There is no server, no database engine, and no network connection required.
+- Backup folders are named by timestamp (e.g. `data/backups/20260526_002612/`) and contain a full copy of all CSV files at the time the backup was triggered.
+- The recovery key is generated once on first run. Only its SHA-256 hash is stored on disk — the plaintext key is shown once and never saved.
